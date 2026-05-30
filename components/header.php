@@ -61,8 +61,8 @@ SessionManager::start();
           <a href="home.php" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Trang chủ</a>
           <a href="courses.php" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Khóa học</a>
           <a href="forum.php" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Diễn đàn</a>
-          <a href="about.php" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Giới thiệu</a>
-          <a href="contact.php" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Liên hệ</a>
+          <a href="#about" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Giới thiệu</a>
+          <a href="#contact" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Liên hệ</a>
         </nav>
 
         <!-- Search & User Menu -->
@@ -98,8 +98,8 @@ SessionManager::start();
         <a href="home.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Trang chủ</a>
         <a href="courses.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Khóa học</a>
         <a href="forum.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Diễn đàn</a>
-        <a href="about.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Giới thiệu</a>
-        <a href="contact.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Liên hệ</a>
+        <a href="#about" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Giới thiệu</a>
+        <a href="#contact" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Liên hệ</a>
         <div class="my-2 border-t border-slate-100"></div>
         <?php if(SessionManager::isLoggedIn()): ?>
             <a href="profile.php" class="block w-full rounded-lg px-4 py-3 text-left font-medium text-slate-600 hover:bg-slate-50">Hồ sơ</a>

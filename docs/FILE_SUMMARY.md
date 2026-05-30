@@ -8,12 +8,12 @@
 
 ### 📁 ROOT LEVEL (Thư Mục Gốc)
 
-| File/Folder | Loại | Mục Đích | Status |
-|---|---|---|---|
-| `index.php` | Entry Point | Redirect → pages/home.php | ✅ |
-| `web_hoc_truc_tuyen.sql` | Database | MySQL schema & initial data | ✅ |
-| `.htaccess` | Config | Apache URL rewriting (optional) | ⚪ |
-| `.docs/` | Internal | VS Code docs (auto-generated) | ⚪ |
+| File/Folder                | Loại       | Mục Đích                     | Status |
+| -------------------------- | ----------- | ------------------------------- | ------ |
+| `index.php`              | Entry Point | Redirect → pages/home.php      | ✅     |
+| `web_hoc_truc_tuyen.sql` | Database    | MySQL schema & initial data     | ✅     |
+| `.htaccess`              | Config      | Apache URL rewriting (optional) | ⚪     |
+| `.docs/`                 | Internal    | VS Code docs (auto-generated)   | ⚪     |
 
 ---
 
@@ -28,6 +28,7 @@ assets/
 ```
 
 **Chức Năng:**
+
 - ✅ CSS: Custom animations (fadeIn, pageEnter, slideFrom*), hover effects, responsive tweaks
 - ✅ JS: Password toggle, course filter, smooth scroll, form validation client-side
 
@@ -42,11 +43,13 @@ components/
 ```
 
 **Sử Dụng:**
+
 - ✅ Included ở đầu tất cả pages (header.php)
 - ✅ Included ở cuối tất cả pages (footer.php)
 - ✅ Giảm lặp lại code
 
 **Nội Dung Header:**
+
 - HTML5 DOCTYPE, meta tags
 - Tailwind CSS CDN
 - Font Awesome CDN
@@ -54,6 +57,7 @@ components/
 - SessionManager::start()
 
 **Nội Dung Footer:**
+
 - Footer links (Product, Company, Support)
 - Social media
 - Copyright
@@ -80,6 +84,7 @@ controllers/
 **Extends:** BaseController (new OOP approach)
 
 **AuthController - Đăng Nhập:**
+
 - Check POST request
 - Get & validate email + password
 - Find user by email
@@ -89,6 +94,7 @@ controllers/
 - Redirect
 
 **RegisterController - Đăng Ký:**
+
 - Check POST request
 - Get & validate all fields
 - Check email not exists
@@ -97,6 +103,7 @@ controllers/
 - Redirect to home
 
 **LogoutController - Đăng Xuất:**
+
 - Destroy session
 - Redirect to login
 
@@ -121,21 +128,25 @@ core/
 ```
 
 **Database.php - Singleton Pattern:**
+
 - ✅ 1 kết nối duy nhất
 - ✅ Singleton::getConnection() - lấy kết nối (tạo nếu chưa có)
 - ✅ Set charset UTF-8 (Tiếng Việt)
 
 **SessionManager.php - Static Class:**
+
 - ✅ Không cần tạo object
 - ✅ Gọi: SessionManager::method()
 - ✅ Quản lý login/logout/session data
 
 **BaseController.php - Abstract Base:**
+
 - ✅ Base class cho tất cả controllers
 - ✅ Phương thức chung: redirect(), getPost(), validate(), log()
 - ✅ Giảm lặp code
 
 **Exceptions.php - Custom Exceptions:**
+
 - ✅ 5 loại exception
 - ✅ Xử lý lỗi chi tiết hơn
 
@@ -152,6 +163,7 @@ helpers/
 ```
 
 **ValidationHelper - Static Class:**
+
 - ✅ Email validation (RFC 5322 format)
 - ✅ Password strength (8+ chars, upper, lower, digit)
 - ✅ Name validation (3-255 chars, Vietnamese support)
@@ -172,12 +184,14 @@ models/
 ```
 
 **User.php - Model:**
+
 - ✅ Dependency injection (receive DB connection)
 - ✅ CRUD operations
 - ✅ Prepared statements (SQL Injection safe)
 - ✅ password_hash/password_verify
 
 **Methods:**
+
 - `findByEmail($email)` - Find user by email
 - `findById($id)` - Find user by ID
 - `emailExists($email)` - Check if email exists
@@ -223,6 +237,7 @@ pages/
 ```
 
 **Structure of Every Page:**
+
 ```php
 <?php include '../components/header.php'; ?>
 <!-- Page content here -->
@@ -230,6 +245,7 @@ pages/
 ```
 
 **Page Protection:**
+
 ```php
 // Protected pages
 SessionManager::requireLogin();    // pages/profile.php
@@ -270,35 +286,35 @@ docs/
 
 ## 📊 File Count & Statistics
 
-| Folder | Files | Type | Lines of Code |
-|--------|-------|------|----------------|
-| `assets/` | 2 | CSS, JS | ~700 |
-| `components/` | 2 | PHP | ~130 |
-| `controllers/` | 3 | PHP (OOP) | ~360 |
-| `core/` | 4 | PHP (OOP) | ~595 |
-| `helpers/` | 1 | PHP (OOP) | ~180 |
-| `models/` | 1 | PHP (OOP) | ~200 |
-| `pages/` | 10 | PHP (Templates) | ~1100 |
-| `setup/` | 1 | PHP (Setup) | ~100 |
-| `docs/` | 3 | Markdown | ~1200 |
-| **TOTAL** | **27** | Mixed | **~4465** |
+| Folder           | Files        | Type            | Lines of Code   |
+| ---------------- | ------------ | --------------- | --------------- |
+| `assets/`      | 2            | CSS, JS         | ~700            |
+| `components/`  | 2            | PHP             | ~130            |
+| `controllers/` | 3            | PHP (OOP)       | ~360            |
+| `core/`        | 4            | PHP (OOP)       | ~595            |
+| `helpers/`     | 1            | PHP (OOP)       | ~180            |
+| `models/`      | 1            | PHP (OOP)       | ~200            |
+| `pages/`       | 10           | PHP (Templates) | ~1100           |
+| `setup/`       | 1            | PHP (Setup)     | ~100            |
+| `docs/`        | 3            | Markdown        | ~1200           |
+| **TOTAL**  | **27** | Mixed           | **~4465** |
 
 ---
 
 ## 🎯 Quick Reference - What Goes Where?
 
-| Need | Go To | File |
-|------|-------|------|
-| Add new page | `pages/` | `pages/my-page.php` |
-| Add page styling | `assets/css/` | `assets/css/index.css` |
-| Add page interaction | `assets/js/` | `assets/js/app.js` |
-| Add validation | `helpers/` | `ValidationHelper.php` |
-| Add model (DB operations) | `models/` | `models/MyModel.php` |
-| Add controller (logic) | `controllers/` | `controllers/MyController.php` |
-| Add exception type | `core/` | `Exceptions.php` |
-| Create test data | `setup/` | `setup_my_setup.php` |
-| Write documentation | `docs/` | `docs/MY_DOC.md` |
-| Add HTML reusable | `components/` | `components/my-component.php` |
+| Need                      | Go To            | File                             |
+| ------------------------- | ---------------- | -------------------------------- |
+| Add new page              | `pages/`       | `pages/my-page.php`            |
+| Add page styling          | `assets/css/`  | `assets/css/index.css`         |
+| Add page interaction      | `assets/js/`   | `assets/js/app.js`             |
+| Add validation            | `helpers/`     | `ValidationHelper.php`         |
+| Add model (DB operations) | `models/`      | `models/MyModel.php`           |
+| Add controller (logic)    | `controllers/` | `controllers/MyController.php` |
+| Add exception type        | `core/`        | `Exceptions.php`               |
+| Create test data          | `setup/`       | `setup_my_setup.php`           |
+| Write documentation       | `docs/`        | `docs/MY_DOC.md`               |
+| Add HTML reusable         | `components/`  | `components/my-component.php`  |
 
 ---
 
@@ -330,28 +346,29 @@ USER SEES RESULT
 
 ## ✅ Best Practices Used
 
-| Practice | Implementation |
-|----------|-----------------|
-| **MVC Pattern** | Model/Controller/View separated |
-| **OOP** | Classes, inheritance, abstraction, interfaces |
-| **Singleton** | Database connection |
-| **Static Class** | SessionManager, ValidationHelper |
-| **Abstract Class** | BaseController |
-| **Custom Exceptions** | Error handling |
-| **Prepared Statements** | SQL Injection protection |
-| **Password Hashing** | password_hash/password_verify |
-| **Session Protection** | SessionManager::requireLogin() |
-| **Input Validation** | ValidationHelper methods |
-| **XSS Prevention** | htmlspecialchars() |
-| **DRY Principle** | Reusable components, base controller |
-| **Dependency Injection** | Pass dependencies via constructor |
-| **Naming Convention** | PascalCase for files/classes, camelCase for methods |
+| Practice                       | Implementation                                      |
+| ------------------------------ | --------------------------------------------------- |
+| **MVC Pattern**          | Model/Controller/View separated                     |
+| **OOP**                  | Classes, inheritance, abstraction, interfaces       |
+| **Singleton**            | Database connection                                 |
+| **Static Class**         | SessionManager, ValidationHelper                    |
+| **Abstract Class**       | BaseController                                      |
+| **Custom Exceptions**    | Error handling                                      |
+| **Prepared Statements**  | SQL Injection protection                            |
+| **Password Hashing**     | password_hash/password_verify                       |
+| **Session Protection**   | SessionManager::requireLogin()                      |
+| **Input Validation**     | ValidationHelper methods                            |
+| **XSS Prevention**       | htmlspecialchars()                                  |
+| **DRY Principle**        | Reusable components, base controller                |
+| **Dependency Injection** | Pass dependencies via constructor                   |
+| **Naming Convention**    | PascalCase for files/classes, camelCase for methods |
 
 ---
 
 ## 🚀 Getting Started
 
 ### 1. Initial Setup
+
 ```
 1. Extract/clone project
 2. Import web_hoc_truc_tuyen.sql to MySQL
@@ -361,6 +378,7 @@ USER SEES RESULT
 ```
 
 ### 2. Login with Test Account
+
 ```
 Email: admin@example.com
 Password: admin123
@@ -368,6 +386,7 @@ Role: Admin
 ```
 
 ### 3. Add a New Feature
+
 ```
 1. Create Model class (models/MyModel.php)
 2. Create Controller class (controllers/MyController.php)
@@ -386,5 +405,5 @@ Role: Admin
 
 ---
 
-**Last Updated: 27/05/2026**  
+**Last Updated: 27/05/2026**
 **Project: WebHọcTrựcTuyến (LearnCode)**
