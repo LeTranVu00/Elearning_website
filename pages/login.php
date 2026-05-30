@@ -72,9 +72,8 @@ if (isset($_GET['code'])) {
         $ho_ten = $google_user['name'];
         $avatar = $google_user['picture'];
         
-        // Xử lý database
-        $database = new Core\Database();
-        $db = $database->getConnection();
+        // Xử lý database 
+        $db = Database::getConnection();
         
         // Kiểm tra user tồn tại chưa
         $query = "SELECT * FROM nguoi_dung WHERE email = :email LIMIT 1";

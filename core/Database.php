@@ -45,7 +45,7 @@ class Database
      * để bên ngoài không thể đọc hay thay đổi trực tiếp.
      * Bảo mật thông tin nhạy cảm!
      */
-    private static string $host = 'localhost:3307';
+    private static string $host = '127.0.0.1';
     private static string $user = 'root';
     private static string $pass = '';
     private static string $name = 'web_hoc_truc_tuyen';
@@ -96,10 +96,11 @@ class Database
             try {
                 // Tạo đối tượng kết nối MySQLi
                 $conn = new mysqli(
-                    self::$host,
-                    self::$user,
-                    self::$pass,
-                    self::$name
+                    '127.0.0.1',
+                    'root',
+                    '',
+                    'web_hoc_truc_tuyen',
+                    3306
                 );
 
                 // Kiểm tra xem kết nối có thành công không

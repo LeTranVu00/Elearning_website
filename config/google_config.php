@@ -1,8 +1,11 @@
+
 <?php
 
-$clientID = getenv('GOOGLE_CLIENT_ID');
-$clientSecret = getenv('GOOGLE_CLIENT_SECRET');
+$google_client_id = getenv('GOOGLE_CLIENT_ID');
+$google_client_secret = getenv('GOOGLE_CLIENT_SECRET');
+);
 
-define('GOOGLE_REDIRECT_URI', 'http://localhost/Elearning_website/pages/login.php');
-
-?>
+define(
+    'GOOGLE_REDIRECT_URI',
+    'http://localhost/Elearning_website/pages/google-callback.php'
+);
