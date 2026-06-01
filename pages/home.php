@@ -1,4 +1,24 @@
-<?php include '../components/header.php'; ?>
+<?php
+require_once '../core/Database.php';
+require_once '../models/Course.php';
+include '../components/header.php';
+
+$courseModel = new Course(Database::getConnection());
+$featuredCourses = $courseModel->getAll(null, 3);
+
+function homeFormatPrice($price) {
+    return number_format($price, 0, '.', ',') . 'đ';
+}
+
+function homeFormatDiscount($price, $originalPrice) {
+    if ($originalPrice == 0) return 0;
+    return round((1 - $price / $originalPrice) * 100);
+}
+
+function homeAvatarUrl($index) {
+    return 'https://i.pravatar.cc/80?img=' . ($index % 10);
+}
+?>
 <div class="page-enter">
   <!-- ============ 1. HERO SECTION ============ -->
   <section class="relative w-full h-screen lg:h-[600px] overflow-hidden">
@@ -47,6 +67,22 @@
         <p class="mb-8 text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-md">
           Khám phá hơn 200+ bộ anime chất lượng cao từ các nhà sản xuất hàng đầu. Bắt đầu hành trình trở thành wibu top 1 VN ngay hôm nay.
         </p>
+        <form action="courses.php" method="get" class="mx-auto mb-6 max-w-2xl">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div class="relative flex-1">
+              <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/75"></i>
+              <input
+                type="search"
+                name="q"
+                class="h-14 w-full rounded-xl border-2 border-white bg-transparent pl-12 pr-4 text-base font-semibold text-white outline-none backdrop-blur transition placeholder:text-white/80 hover:bg-white/10 focus:bg-white/20 focus:ring-2 focus:ring-white/30"
+                placeholder="Tìm khóa học bạn muốn học..."
+              >
+            </div>
+            <button type="submit" class="rounded-xl border-2 border-white bg-transparent px-6 py-3.5 font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:min-w-32">
+              Tìm kiếm
+            </button>
+          </div>
+        </form>
         <div class="flex flex-col gap-3 sm:flex-row justify-center">
           <a href="courses.php" class="btn-premium rounded-xl bg-white px-8 py-3 font-semibold text-primary shadow-lg hover:bg-white/90 transform hover:scale-105 transition">
             Khám phá khóa học <i class="fa-solid fa-arrow-right ml-2"></i>
@@ -145,7 +181,6 @@
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <div class="mb-12 text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Danh mục khóa học</h2>
-        <p class="text-lg text-slate-600">Chọn lĩnh vực bạn muốn học</p>
       </div>
       <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
         <a href="courses.php" class="group rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition duration-300">
@@ -199,7 +234,6 @@
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <div class="mb-12 text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Tại sao chọn LearnCode?</h2>
-        <p class="text-lg text-slate-600">Những tính năng vượt trội giúp bạn thành công</p>
       </div>
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <div class="rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 hover:shadow-lg transition">
@@ -260,108 +294,97 @@
           Xem tất cả <i class="fa-solid fa-arrow-right ml-2"></i>
         </a>
       </div>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-2xl transition duration-300">
-          <div class="relative aspect-video overflow-hidden bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&q=80" alt="React" class="h-full w-full object-cover group-hover:scale-110 transition duration-300">
-            <span class="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Trung cấp</span>
-            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-600 hover:text-red-500 hover:bg-white transition">
-              <i class="fa-regular fa-heart"></i>
-            </button>
-          </div>
-          <div class="space-y-4 p-6">
-            <div>
-              <h3 class="line-clamp-2 text-lg font-bold text-slate-900 mb-2">React từ cơ bản đến nâng cao</h3>
-              <p class="line-clamp-2 text-slate-600">Học React từ đầu với dự án thực tế và best practices.</p>
-            </div>
-            <div class="flex items-center gap-3 text-sm text-slate-600">
-              <img class="h-9 w-9 rounded-full" src="https://i.pravatar.cc/80?img=6" alt="">
-              <span class="font-medium">Nguyễn Văn A</span>
-            </div>
-            <div class="flex flex-wrap gap-4 text-sm text-slate-600">
-              <span><i class="fa-solid fa-star text-amber-400"></i> <b class="text-slate-900">4.8</b> (245)</span>
-              <span><i class="fa-solid fa-users"></i> 1,234</span>
-              <span><i class="fa-regular fa-clock"></i> 12 giờ</span>
-            </div>
-            <div class="flex items-baseline justify-between pt-4 border-t border-slate-200">
-              <div>
-                <span class="text-2xl font-bold text-primary">1,200,000₫</span>
-                <span class="ml-2 text-sm text-slate-400 line-through">2,000,000₫</span>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <?php if (!empty($featuredCourses)): ?>
+          <?php foreach ($featuredCourses as $index => $course): ?>
+            <?php
+              $discount = homeFormatDiscount($course['gia'], $course['gia_goc']);
+              $avgRating = $courseModel->getAverageRating($course['id']);
+            ?>
+            <article class="card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md hover:shadow-2xl transition-all duration-300">
+              <div class="relative aspect-[16/9] overflow-hidden bg-slate-200 lg:aspect-[5/3]">
+                <img src="<?php echo htmlspecialchars($course['anh']); ?>" alt="<?php echo htmlspecialchars($course['ten_khoa_hoc']); ?>" class="h-full w-full object-cover card-img-zoom group-hover:scale-110 transition-transform duration-300">
+                <?php if ($discount > 0): ?>
+                  <span class="absolute left-3 top-3 rounded-full bg-warning px-3 py-1.5 text-xs font-bold text-white shadow-md">
+                    <i class="fa-solid fa-tag mr-1"></i><?php echo $discount; ?>%
+                  </span>
+                <?php endif; ?>
+                <button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-md transition hover:bg-white hover:scale-110 text-primary">
+                  <i class="fa-regular fa-heart text-lg"></i>
+                </button>
+                <span class="absolute bottom-3 left-3 rounded-full bg-black/70 px-3 py-1.5 text-xs font-bold text-white"><?php echo Course::formatLevel($course['muc_do']); ?></span>
               </div>
-            </div>
-            <a href="course-detail.php" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white hover:bg-indigo-700 transition text-center block">
-              Xem chi tiết
-            </a>
-          </div>
-        </article>
+              <div class="space-y-2.5 p-5 flex flex-col flex-1">
+                <h3 class="line-clamp-2 min-h-11 text-lg font-bold leading-snug text-slate-900 group-hover:text-primary transition"><?php echo htmlspecialchars($course['ten_khoa_hoc']); ?></h3>
+                <p class="line-clamp-2 min-h-10 text-[15px] text-slate-600 leading-relaxed"><?php echo htmlspecialchars($course['mo_ta_ngan']); ?></p>
 
-        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-2xl transition duration-300">
-          <div class="relative aspect-video overflow-hidden bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=1200&q=80" alt="JavaScript" class="h-full w-full object-cover group-hover:scale-110 transition duration-300">
-            <span class="absolute left-4 top-4 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">Cơ bản</span>
-            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-600 hover:text-red-500 hover:bg-white transition">
-              <i class="fa-regular fa-heart"></i>
-            </button>
-          </div>
-          <div class="space-y-4 p-6">
-            <div>
-              <h3 class="line-clamp-2 text-lg font-bold text-slate-900 mb-2">JavaScript ES6+ hiện đại</h3>
-              <p class="line-clamp-2 text-slate-600">Làm chủ JavaScript hiện đại với ES6+ và nhiều kỹ thuật mới.</p>
-            </div>
-            <div class="flex items-center gap-3 text-sm text-slate-600">
-              <img class="h-9 w-9 rounded-full" src="https://i.pravatar.cc/80?img=7" alt="">
-              <span class="font-medium">Trần Thị B</span>
-            </div>
-            <div class="flex flex-wrap gap-4 text-sm text-slate-600">
-              <span><i class="fa-solid fa-star text-amber-400"></i> <b class="text-slate-900">4.9</b> (312)</span>
-              <span><i class="fa-solid fa-users"></i> 2,156</span>
-              <span><i class="fa-regular fa-clock"></i> 10 giờ</span>
-            </div>
-            <div class="flex items-baseline justify-between pt-4 border-t border-slate-200">
-              <div>
-                <span class="text-2xl font-bold text-primary">900,000₫</span>
-                <span class="ml-2 text-sm text-slate-400 line-through">1,500,000₫</span>
-              </div>
-            </div>
-            <a href="course-detail.php" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white hover:bg-indigo-700 transition text-center block">
-              Xem chi tiết
-            </a>
-          </div>
-        </article>
+                <div class="flex min-h-11 items-center gap-2 pt-2 border-t border-slate-100">
+                  <img class="h-8 w-8 rounded-full ring-2 ring-primary/20" src="<?php echo homeAvatarUrl($index); ?>" alt="">
+                  <span class="text-sm font-medium text-slate-800"><?php echo htmlspecialchars($course['giang_vien'] ?? 'Chưa xác định'); ?></span>
+                </div>
 
-        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-2xl transition duration-300">
-          <div class="relative aspect-video overflow-hidden bg-slate-200">
-            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80" alt="Full-stack" class="h-full w-full object-cover group-hover:scale-110 transition duration-300">
-            <span class="absolute left-4 top-4 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">Nâng cao</span>
-            <button class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-600 hover:text-red-500 hover:bg-white transition">
-              <i class="fa-regular fa-heart"></i>
-            </button>
-          </div>
-          <div class="space-y-4 p-6">
-            <div>
-              <h3 class="line-clamp-2 text-lg font-bold text-slate-900 mb-2">Full-stack Web Development</h3>
-              <p class="line-clamp-2 text-slate-600">Trở thành full-stack developer với MERN stack.</p>
-            </div>
-            <div class="flex items-center gap-3 text-sm text-slate-600">
-              <img class="h-9 w-9 rounded-full" src="https://i.pravatar.cc/80?img=8" alt="">
-              <span class="font-medium">Lê Văn C</span>
-            </div>
-            <div class="flex flex-wrap gap-4 text-sm text-slate-600">
-              <span><i class="fa-solid fa-star text-amber-400"></i> <b class="text-slate-900">4.7</b> (189)</span>
-              <span><i class="fa-solid fa-users"></i> 856</span>
-              <span><i class="fa-regular fa-clock"></i> 40 giờ</span>
-            </div>
-            <div class="flex items-baseline justify-between pt-4 border-t border-slate-200">
-              <div>
-                <span class="text-2xl font-bold text-primary">2,500,000₫</span>
-                <span class="ml-2 text-sm text-slate-400 line-through">4,000,000₫</span>
+                <div class="min-h-14 space-y-1 text-sm text-slate-600 py-1.5 border-b border-slate-100">
+                  <?php if ($course['so_bai_giang']): ?>
+                    <div class="flex items-center gap-1.5">
+                      <i class="fa-solid fa-book text-primary"></i>
+                      <span><b class="text-slate-900"><?php echo $course['so_bai_giang']; ?></b> bài</span>
+                    </div>
+                  <?php endif; ?>
+
+                  <?php if ($course['ngay_khai_giang']): ?>
+                    <div class="flex items-center gap-1.5">
+                      <i class="fa-solid fa-calendar text-primary"></i>
+                      <span>Khai giảng: <b class="text-slate-900"><?php echo date('d/m', strtotime($course['ngay_khai_giang'])); ?></b></span>
+                    </div>
+                  <?php endif; ?>
+
+                  <?php if ($course['lich_hoc']): ?>
+                    <div class="flex items-center gap-1.5">
+                      <i class="fa-solid fa-clock text-primary text-xs"></i>
+                      <span><?php echo htmlspecialchars($course['lich_hoc']); ?></span>
+                    </div>
+                  <?php endif; ?>
+                </div>
+
+                <div class="flex min-h-8 flex-wrap items-center gap-3 text-sm text-slate-600 py-1">
+                  <?php if ($avgRating): ?>
+                    <span class="flex items-center gap-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <b class="text-slate-900"><?php echo number_format($avgRating, 1); ?></b>
+                    </span>
+                  <?php endif; ?>
+                  <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-users text-primary text-sm"></i>
+                    <?php echo number_format($course['so_hoc_vien']); ?>
+                  </span>
+                  <?php if ($course['thoi_luong']): ?>
+                    <span class="flex items-center gap-1">
+                      <i class="fa-regular fa-hourglass text-primary text-sm"></i>
+                      <?php echo $course['thoi_luong']; ?>h
+                    </span>
+                  <?php endif; ?>
+                </div>
+
+                <div class="space-y-1 border-t border-slate-100 pt-2.5 mt-auto">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl font-bold text-primary"><?php echo homeFormatPrice($course['gia']); ?></span>
+                    <?php if ($course['gia_goc'] != $course['gia']): ?>
+                      <span class="text-xs text-slate-400 line-through"><?php echo homeFormatPrice($course['gia_goc']); ?></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+
+                <a href="course-detail.php?id=<?php echo $course['id']; ?>" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white btn-premium transition hover:bg-indigo-700 shadow-md hover:shadow-lg block text-center text-sm">
+                  Xem chi tiết
+                </a>
               </div>
-            </div>
-            <a href="course-detail.php" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white hover:bg-indigo-700 transition text-center block">
-              Xem chi tiết
-            </a>
+            </article>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <div class="col-span-full text-center py-12">
+            <p class="text-slate-600 text-lg">Chưa có khóa học nổi bật để hiển thị</p>
           </div>
-        </article>
+        <?php endif; ?>
       </div>
     </div>
   </section>

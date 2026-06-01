@@ -1,114 +1,59 @@
 <?php include '../components/header.php'; ?>
-<section class="page-enter min-h-screen bg-gradient-to-br from-indigo-50 via-cyan-50 to-emerald-50 px-4 py-10">
-      <div class="mx-auto w-full max-w-md">
-        <div class="mb-8 text-center">
-          <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-2xl font-bold text-white">L</div>
-          <h1 class="mb-2 text-3xl font-bold">Tao tai khoan</h1>
-          <p class="text-slate-500">Bat dau hanh trinh hoc tap cua ban</p>
+
+<section class="page-enter min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 px-4 py-10">
+  <div class="mx-auto flex min-h-[calc(100vh-10rem)] w-full max-w-5xl items-center justify-center">
+    <div class="grid w-full overflow-hidden rounded-3xl border border-white/70 bg-white/75 shadow-soft backdrop-blur-xl lg:grid-cols-[1fr_0.9fr]">
+      <div class="hidden bg-gradient-to-br from-secondary to-primary p-10 text-white lg:flex lg:flex-col lg:justify-between">
+        <div>
+          <div class="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 text-2xl font-bold">L</div>
+          <h1 class="mb-4 text-4xl font-bold leading-tight">Bắt đầu học nhanh hơn với Gmail</h1>
+          <p class="text-base leading-7 text-white/85">Nếu Gmail chưa có trên hệ thống, LearnCode sẽ tự tạo tài khoản và đưa bạn vào trang học ngay.</p>
         </div>
-
-        <div class="glass-card scale-in rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-soft">
-          <h2 class="text-xl font-bold">Dang ky</h2>
-          <p class="mb-4 text-sm text-slate-500">Dien thong tin de tao tai khoan moi</p>
-
-          <?php
-          // Hiển thị lỗi nếu có
-          $errors = SessionManager::getErrors();
-          if (!empty($errors)) {
-              echo '<div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">';
-              foreach ($errors as $error) {
-                  echo '<p>• ' . htmlspecialchars($error) . '</p>';
-              }
-              echo '</div>';
-          }
-          ?>
-
-          <!-- FORM ĐĂNG KÝ -->
-          <form class="space-y-4" method="POST" action="../controllers/RegisterController.php">
-            <!-- INPUT HỌ VÀ TÊN -->
-            <label class="block">
-              <span class="mb-1 block text-sm font-medium">Ho va ten</span>
-              <div class="relative">
-                <i class="fa-regular fa-user pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" name="ho_ten" class="h-11 w-full rounded-xl border border-slate-200 pl-9 pr-3 outline-none focus:border-primary" placeholder="Nguyen Van A" required>
-              </div>
-            </label>
-
-            <!-- INPUT EMAIL -->
-            <label class="block">
-              <span class="mb-1 block text-sm font-medium">Email</span>
-              <div class="relative">
-                <i class="fa-regular fa-envelope pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="email" name="email" class="h-11 w-full rounded-xl border border-slate-200 pl-9 pr-3 outline-none focus:border-primary" placeholder="name@example.com" required>
-              </div>
-            </label>
-
-            <!-- INPUT SỐ ĐIỆN THOẠI -->
-            <label class="block">
-              <span class="mb-1 block text-sm font-medium">So dien thoai</span>
-              <div class="relative">
-                <i class="fa-solid fa-phone pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="tel" name="so_dien_thoai" class="h-11 w-full rounded-xl border border-slate-200 pl-9 pr-3 outline-none focus:border-primary" placeholder="0123 456 789">
-              </div>
-            </label>
-
-            <!-- INPUT MẬT KHẨU -->
-            <label class="block">
-              <span class="mb-1 block text-sm font-medium">Mat khau</span>
-              <div class="relative">
-                <i class="fa-solid fa-lock pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="register-password" type="password" name="password" class="h-11 w-full rounded-xl border border-slate-200 pl-9 pr-10 outline-none focus:border-primary" placeholder="••••••••" required>
-                <button data-action="toggle-password" data-target="register-password" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800">
-                  <i class="fa-regular fa-eye"></i>
-                </button>
-              </div>
-            </label>
-
-            <!-- INPUT XÁC NHẬN MẬT KHẨU -->
-            <label class="block">
-              <span class="mb-1 block text-sm font-medium">Xac nhan mat khau</span>
-              <div class="relative">
-                <i class="fa-solid fa-lock pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="register-confirm-password" type="password" name="confirm_password" class="h-11 w-full rounded-xl border border-slate-200 pl-9 pr-10 outline-none focus:border-primary" placeholder="••••••••" required>
-                <button data-action="toggle-password" data-target="register-confirm-password" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800">
-                  <i class="fa-regular fa-eye"></i>
-                </button>
-              </div>
-            </label>
-
-            <!-- CHECKBOX ĐIỀU KHOẢN -->
-            <label class="flex items-start gap-2 text-sm text-slate-500">
-              <input type="checkbox" class="mt-1 h-4 w-4 accent-primary" required>
-              <span>
-                Toi dong y voi
-                <a href="#" class="text-primary hover:underline">Dieu khoan dich vu</a>
-                va
-                <a href="#" class="text-primary hover:underline">Chinh sach bao mat</a>
-              </span>
-            </label>
-
-            <!-- NÚT SUBMIT -->
-            <button type="submit" class="w-full rounded-xl bg-primary px-4 py-3 font-semibold text-white btn-premium">
-              Tao tai khoan
-            </button>
-          </form>
-
-          <div class="relative my-4">
-            <div class="h-px bg-slate-200"></div>
-            <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-xs text-slate-400">hoac</span>
+        <div class="grid gap-3 text-sm text-white/90">
+          <div class="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3">
+            <i class="fa-solid fa-user-check"></i>
+            Tự động tạo tài khoản mới
           </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <button class="btn-premium glass-card rounded-xl border border-slate-200 px-3 py-2 font-medium text-slate-700 hover:bg-slate-50">Google</button>
-            <button class="btn-premium glass-card rounded-xl border border-slate-200 px-3 py-2 font-medium text-slate-700 hover:bg-slate-50">Facebook</button>
+          <div class="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3">
+            <i class="fa-solid fa-lock"></i>
+            Không cần tạo mật khẩu riêng
           </div>
         </div>
-
-        <p class="mt-6 text-center text-sm text-slate-500">
-          Da co tai khoan?
-          <a href="login.php"  class="font-semibold text-primary hover:underline">Dang nhap</a>
-        </p>
       </div>
-    </section>
+
+      <div class="p-6 sm:p-10">
+        <div class="mb-8 text-center lg:text-left">
+          <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-secondary text-2xl font-bold text-white lg:mx-0 lg:hidden">L</div>
+          <p class="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">LearnCode</p>
+          <h2 class="mb-2 text-3xl font-bold text-slate-900">Tạo tài khoản</h2>
+          <p class="text-sm leading-6 text-slate-500">Tài khoản sẽ được tạo tự động bằng Gmail nếu bạn chưa từng đăng nhập.</p>
+        </div>
+
+        <?php
+        $errors = SessionManager::getErrors();
+        if (!empty($errors)) {
+            echo '<div class="mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">';
+            foreach ($errors as $error) {
+                echo '<p>• ' . htmlspecialchars($error) . '</p>';
+            }
+            echo '</div>';
+        }
+        ?>
+
+        <a href="../controllers/GoogleAuthController.php" class="btn-premium flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 font-semibold text-slate-800 shadow-sm hover:border-slate-300 hover:bg-slate-50">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/>
+          </svg>
+          Tiếp tục với Gmail
+        </a>
+
+        <p class="mt-5 text-center text-xs leading-5 text-slate-400">Google chỉ chia sẻ thông tin cơ bản như email, tên và ảnh đại diện để tạo tài khoản.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <?php include '../components/footer.php'; ?>

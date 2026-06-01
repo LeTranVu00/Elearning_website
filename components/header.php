@@ -6,6 +6,8 @@
  * Sử dụng SessionManager (OOP) thay vì session_start() thủ tục cũ.
  * File này được include ở đầu tất cả các trang trong pages/*.php
  */
+// Load local environment variables (optional .env) early
+require_once __DIR__ . '/../core/google_env.php';
 require_once __DIR__ . '/../core/SessionManager.php';
 
 // Khởi động session qua OOP - SessionManager sẽ kiểm tra trước khi start
@@ -65,13 +67,8 @@ SessionManager::start();
           <a href="#contact" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary transition-colors">Liên hệ</a>
         </nav>
 
-        <!-- Search & User Menu -->
+        <!-- User Menu -->
         <div class="flex items-center gap-3">
-          <div class="relative hidden sm:block">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="Tìm kiếm..." class="h-10 w-48 lg:w-64 rounded-full border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm outline-none transition-all focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20" />
-          </div>
-
           <!-- User Auth Section -->
           <div class="flex items-center gap-2">
             <?php if(SessionManager::isLoggedIn()): ?>

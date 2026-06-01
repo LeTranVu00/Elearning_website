@@ -159,50 +159,64 @@ class User
     }
 
     /**
-     * Tạo tài khoản người dùng mới.
-     *
-     * @param string $hoTen    Họ tên đầy đủ
-     * @param string $email    Email (dùng để đăng nhập)
-     * @param string $password Mật khẩu PLAIN TEXT (sẽ tự động hash)
-     * @param string $vaiTro   Vai trò: 'user' hoặc 'admin'
-     * @return bool true nếu tạo thành công
-     *
-     * VÍ DỤ:
-     *   $success = $userModel->create('Nguyễn Văn A', 'a@example.com', 'Pass123', 'user');
+     * Find a user by the Google account identifier returned by OpenID Connect.
      */
-    public function create(string $hoTen, string $email, string $password, string $vaiTro = 'user'): bool
+    public function findByGoogleId(string $googleId): ?array
     {
-        // Luôn hash mật khẩu trước khi lưu vào database!
-        // password_hash() dùng thuật toán bcrypt - rất an toàn
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $sql = 'SELECT * FROM nguoi_dung WHERE google_id = ? LIMIT 1';
+        $stmt = $this->conn->prepare($sql);
 
-        $sql = 'INSERT INTO nguoi_dung (ho_ten, email, mat_khau, vai_tro, trang_thai) VALUES (?, ?, ?, ?, "hoat_dong")';
+        if (!$stmt) {
+            return null;
+        }
+
+        $stmt->bind_param('s', $googleId);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    }
+
+    public function linkGoogleAccount(int $userId, string $googleId, string $avatar = ''): bool
+    {
+        $sql = 'UPDATE nguoi_dung
+                SET google_id = ?, auth_provider = "google", avatar = COALESCE(NULLIF(?, ""), avatar)
+                WHERE id = ?';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
             return false;
         }
 
-        // "ssss" = 4 tham số kiểu string
-        $stmt->bind_param('ssss', $hoTen, $email, $hashedPassword, $vaiTro);
+        $stmt->bind_param('ssi', $googleId, $avatar, $userId);
         $success = $stmt->execute();
         $stmt->close();
 
         return $success;
     }
 
-    /**
-     * Xác minh mật khẩu người dùng nhập vào có khớp với hash trong DB không.
-     * Wrapper tiện lợi cho hàm password_verify() của PHP.
-     *
-     * @param string $plainPassword  Mật khẩu người dùng vừa nhập (chưa hash)
-     * @param string $hashedPassword Hash mật khẩu lấy từ database
-     * @return bool true nếu mật khẩu đúng
-     */
-    public function verifyPassword(string $plainPassword, string $hashedPassword): bool
+    public function createFromGoogle(array $googleUser): bool
     {
-        // password_verify() tự động so sánh plain text với hash
-        // Không bao giờ tự decrypt hash - PHP làm việc này một chiều!
-        return password_verify($plainPassword, $hashedPassword);
+        $hoTen = $googleUser['name'] ?? $googleUser['email'];
+        $email = $googleUser['email'];
+        $googleId = $googleUser['google_id'];
+        $avatar = $googleUser['avatar'] ?? '';
+
+        $sql = 'INSERT INTO nguoi_dung
+                    (ho_ten, email, avatar, vai_tro, trang_thai, google_id, auth_provider)
+                VALUES (?, ?, ?, "user", "hoat_dong", ?, "google")';
+        $stmt = $this->conn->prepare($sql);
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('ssss', $hoTen, $email, $avatar, $googleId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
     }
 }

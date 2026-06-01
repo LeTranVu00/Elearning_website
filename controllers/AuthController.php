@@ -70,78 +70,10 @@ class AuthController extends BaseController
      */
     public function login(): void
     {
-        // Chỉ xử lý nếu request là POST (form được submit)
-        if (!$this->isPost()) {
-            // Nếu ai đó truy cập file này trực tiếp (GET) → về trang login
-            $this->redirect('../pages/login.php');
-        }
-
-        // =====================================================================
-        // BƯỚC 1: LẤY VÀ LÀM SẠCH DỮ LIỆU TỪ FORM
-        // =====================================================================
-        // trim() xóa khoảng trắng thừa ở đầu và cuối chuỗi
-        // ?? '' : nếu không có dữ liệu POST thì dùng chuỗi rỗng
-        $email    = trim($this->getPost('email', ''));
-        $password = trim($this->getPost('password', ''));
-
-        // Mảng chứa các thông báo lỗi validation
-        $errors = [];
-
-        // =====================================================================
-        // BƯỚC 2: VALIDATION - Kiểm tra dữ liệu đầu vào
-        // =====================================================================
-        if (empty($email)) {
-            $errors[] = '❌ Email không được để trống';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            // filter_var kiểm tra định dạng email có hợp lệ không
-            $errors[] = '❌ Email không đúng định dạng';
-        }
-
-        if (empty($password)) {
-            $errors[] = '❌ Mật khẩu không được để trống';
-        }
-
-        // Nếu có lỗi validation → lưu lỗi vào session và quay lại trang login
-        if (!empty($errors)) {
-            SessionManager::setErrors($errors);
-            $this->redirect('../pages/login.php');
-        }
-
-        // =====================================================================
-        // BƯỚC 3: TÌM KIẾM NGƯỜI DÙNG TRONG DATABASE (qua User Model)
-        // =====================================================================
-        // Gọi phương thức của User Model - Controller không tự query SQL!
-        $user = $this->userModel->findByEmail($email);
-
-        // =====================================================================
-        // BƯỚC 4: XÁC MINH MẬT KHẨU VÀ TRẠNG THÁI TÀI KHOẢN
-        // =====================================================================
-        if ($user === null) {
-            // Không tìm thấy email trong database
-            // Trả về thông báo chung (không tiết lộ email có tồn tại hay không)
-            $errors[] = '❌ Email hoặc mật khẩu không chính xác';
-        } elseif (!$this->userModel->verifyPassword($password, $user['mat_khau'])) {
-            // Tìm thấy user nhưng mật khẩu sai
-            $errors[] = '❌ Email hoặc mật khẩu không chính xác';
-        } elseif ($user['trang_thai'] === 'khoa') {
-            // Tài khoản bị khóa bởi admin
-            $errors[] = '❌ Tài khoản của bạn đã bị khóa. Vui lòng liên hệ hỗ trợ.';
-        }
-
-        // Nếu có lỗi xác thực → quay lại trang login với thông báo lỗi
-        if (!empty($errors)) {
-            SessionManager::setErrors($errors);
-            $this->redirect('../pages/login.php');
-        }
-
-        // =====================================================================
-        // BƯỚC 5: ĐĂNG NHẬP THÀNH CÔNG → Tạo Session
-        // =====================================================================
-        // Gọi SessionManager::login() để lưu thông tin user vào session
-        SessionManager::login($user);
-
-        // Chuyển hướng người dùng về trang chủ sau khi đăng nhập thành công
-        $this->redirect('../pages/home.php');
+        SessionManager::setErrors([
+            'Hệ thống hiện chỉ hỗ trợ đăng nhập bằng Google.',
+        ]);
+        $this->redirect('../controllers/GoogleAuthController.php');
     }
 }
 
