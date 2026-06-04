@@ -29,16 +29,7 @@
           <p class="text-sm leading-6 text-slate-500">LearnCode chỉ sử dụng Google SSO, không lưu mật khẩu Gmail của bạn.</p>
         </div>
 
-        <?php
-        $errors = SessionManager::getErrors();
-        if (!empty($errors)) {
-            echo '<div class="mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">';
-            foreach ($errors as $error) {
-                echo '<p>• ' . htmlspecialchars($error) . '</p>';
-            }
-            echo '</div>';
-        }
-        ?>
+
 
         <a href="../controllers/GoogleAuthController.php" class="btn-premium flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 font-semibold text-slate-800 shadow-sm hover:border-slate-300 hover:bg-slate-50">
           <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">

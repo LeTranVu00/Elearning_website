@@ -82,7 +82,13 @@ class GoogleAuthController extends BaseController
         }
 
         SessionManager::login($user);
-        $this->redirect('../pages/home.php');
+        
+        // Redirect based on user role
+        if ($user['vai_tro'] === 'instructor') {
+            $this->redirect('../index.php?page=instructor-courses');
+        } else {
+            $this->redirect('../pages/home.php');
+        }
     }
 
     private function findOrCreateUser(array $googleUser): ?array

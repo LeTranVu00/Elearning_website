@@ -26,7 +26,7 @@ class Enrollment
      */
     public function enroll(int $userId, int $courseId): bool
     {
-        $sql = 'INSERT INTO dang_ky_khoa_hoc (user_id, khoa_hoc_id, trang_thai) VALUES (?, ?, "learning")';
+        $sql = 'INSERT INTO dang_ky_khoa_hoc (nguoi_dung_id, khoa_hoc_id, trang_thai) VALUES (?, ?, "dang_hoc")';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
@@ -49,7 +49,7 @@ class Enrollment
      */
     public function isEnrolled(int $userId, int $courseId): bool
     {
-        $sql = 'SELECT id FROM dang_ky_khoa_hoc WHERE user_id = ? AND khoa_hoc_id = ? LIMIT 1';
+        $sql = 'SELECT id FROM dang_ky_khoa_hoc WHERE nguoi_dung_id = ? AND khoa_hoc_id = ? LIMIT 1';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
@@ -72,11 +72,11 @@ class Enrollment
      */
     public function getCoursesByUser(int $userId): array
     {
-        $sql = 'SELECT dang_ky_khoa_hoc.*, khoa_hoc.ten_khoa_hoc, khoa_hoc.gia_tien 
+        $sql = 'SELECT dang_ky_khoa_hoc.*, khoa_hoc.ten_khoa_hoc, khoa_hoc.gia 
                 FROM dang_ky_khoa_hoc 
                 LEFT JOIN khoa_hoc ON dang_ky_khoa_hoc.khoa_hoc_id = khoa_hoc.id 
-                WHERE dang_ky_khoa_hoc.user_id = ? 
-                ORDER BY dang_ky_khoa_hoc.dang_ky_luc DESC';
+                WHERE dang_ky_khoa_hoc.nguoi_dung_id = ? 
+                ORDER BY dang_ky_khoa_hoc.ngay_dang_ky DESC';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
@@ -106,7 +106,7 @@ class Enrollment
      */
     public function updateProgress(int $userId, int $courseId, int $progress): bool
     {
-        $sql = 'UPDATE dang_ky_khoa_hoc SET tien_do = ? WHERE user_id = ? AND khoa_hoc_id = ?';
+        $sql = 'UPDATE dang_ky_khoa_hoc SET trang_thai = ? WHERE nguoi_dung_id = ? AND khoa_hoc_id = ?';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
@@ -130,8 +130,8 @@ class Enrollment
     public function markCompleted(int $userId, int $courseId): bool
     {
         $sql = 'UPDATE dang_ky_khoa_hoc 
-                SET trang_thai = "completed", tien_do = 100, hoan_thanh_luc = NOW() 
-                WHERE user_id = ? AND khoa_hoc_id = ?';
+                SET trang_thai = "hoan_thanh" 
+                WHERE nguoi_dung_id = ? AND khoa_hoc_id = ?';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {
@@ -154,7 +154,7 @@ class Enrollment
      */
     public function findByUserAndCourse(int $userId, int $courseId): ?array
     {
-        $sql = 'SELECT * FROM dang_ky_khoa_hoc WHERE user_id = ? AND khoa_hoc_id = ? LIMIT 1';
+        $sql = 'SELECT * FROM dang_ky_khoa_hoc WHERE nguoi_dung_id = ? AND khoa_hoc_id = ? LIMIT 1';
         $stmt = $this->conn->prepare($sql);
 
         if (!$stmt) {

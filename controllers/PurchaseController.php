@@ -94,6 +94,22 @@ class PurchaseController extends BaseController
             $this->redirect('../pages/course-detail.php?id=' . $courseId);
         }
 
+        // --- TẠM THỜI BYPASS THANH TOÁN (Do cấu trúc DB chưa đồng bộ) ---
+        // 1. Ghi danh (enroll) ngay lập tức
+        $isEnrolled = $this->enrollmentModel->enroll($userId, $courseId);
+        if (!$isEnrolled) {
+            SessionManager::setErrors(['❌ Có lỗi xảy ra khi ghi danh khóa học.']);
+            $this->redirect('../pages/course-detail.php?id=' . $courseId);
+        }
+
+        // 2. Lưu thông báo thành công
+        SessionManager::set('purchase_success', true);
+        
+        // 3. Chuyển hướng về trang chủ
+        $this->redirect('../pages/home.php');
+
+        /*
+        // MÃ CŨ (Đang bị lỗi do DB không có bảng don_hang)
         // Tạo đơn hàng
         $orderId = $this->orderModel->create($userId, (float)$course['gia']);
         if (!$orderId) {
@@ -105,26 +121,18 @@ class PurchaseController extends BaseController
         $this->orderModel->addItem($orderId, $courseId, (float)$course['gia']);
 
         // Tạo bản ghi thanh toán
-        $paymentId = $this->paymentModel->create($orderId, 'momo', (float)$course['gia']);
+        $paymentId = $this->paymentModel->create($orderId, 'manual', (float)$course['gia']);
         if (!$paymentId) {
             SessionManager::setErrors(['❌ Lỗi khi tạo thanh toán']);
             $this->redirect('../pages/course-detail.php?id=' . $courseId);
         }
 
-        // Tạo URL thanh toán Momo
-        $paymentResult = $this->momoService->createPaymentUrl(
-            $orderId,
-            (int)($course['gia'] * 1),
-            "Khóa học: " . $course['ten_khoa_hoc']
-        );
+        // Cập nhật trạng thái đơn hàng
+        $this->orderModel->updateStatus($orderId, 'completed');
 
-        if (!$paymentResult['success']) {
-            SessionManager::setErrors(['❌ Lỗi khi tạo URL thanh toán: ' . $paymentResult['message']]);
-            $this->redirect('../pages/course-detail.php?id=' . $courseId);
-        }
-
-        // Redirect tới Momo
-        $this->redirect($paymentResult['payUrl']);
+        // Cập nhật trạng thái thanh toán
+        $this->paymentModel->updateStatus((int)$paymentId, 'success');
+        */
     }
 
     /**

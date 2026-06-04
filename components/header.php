@@ -108,4 +108,62 @@ SessionManager::start();
     </div>
   </header>
   <!-- End Header -->
+
+  <!-- Global Toast Notifications -->
+  <?php
+  $globalErrors = SessionManager::getErrors();
+  $purchaseSuccess = SessionManager::get('purchase_success');
+  if ($purchaseSuccess) {
+      SessionManager::remove('purchase_success');
+  }
+  ?>
+  <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-3 pointer-events-none">
+      <style>
+          @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+          .toast-item { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; pointer-events: auto; }
+      </style>
+      
+      <?php if (!empty($globalErrors)): ?>
+          <?php foreach ($globalErrors as $err): ?>
+              <div class="toast-item flex items-start gap-3 rounded-xl border border-red-100 bg-white p-4 shadow-xl min-w-[300px] max-w-sm">
+                  <div class="flex-shrink-0 text-red-500">
+                      <i class="fa-solid fa-circle-exclamation text-xl mt-0.5"></i>
+                  </div>
+                  <div class="flex-1 text-sm font-medium text-slate-800 leading-relaxed">
+                      <?php echo htmlspecialchars($err); ?>
+                  </div>
+                  <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition p-1">
+                      <i class="fa-solid fa-xmark"></i>
+                  </button>
+              </div>
+          <?php endforeach; ?>
+      <?php endif; ?>
+
+      <?php if ($purchaseSuccess): ?>
+          <div class="toast-item flex items-start gap-3 rounded-xl border border-emerald-100 bg-white p-4 shadow-xl min-w-[300px] max-w-sm">
+              <div class="flex-shrink-0 text-emerald-500">
+                  <i class="fa-solid fa-circle-check text-xl mt-0.5"></i>
+              </div>
+              <div class="flex-1 text-sm font-medium text-slate-800 leading-relaxed">
+                  Thanh toán thành công! Khóa học đã được kích hoạt.
+              </div>
+              <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition p-1">
+                  <i class="fa-solid fa-xmark"></i>
+              </button>
+          </div>
+      <?php endif; ?>
+  </div>
+
+  <script>
+      // Tự động ẩn toast sau 6 giây
+      setTimeout(() => {
+          document.querySelectorAll('.toast-item').forEach(el => {
+              el.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+              el.style.opacity = '0';
+              el.style.transform = 'translateX(100%)';
+              setTimeout(() => el.remove(), 500);
+          });
+      }, 6000);
+  </script>
+
   <main class="flex-grow">

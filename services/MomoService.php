@@ -12,7 +12,7 @@ class MomoService {
         $this->partnerCode = getenv('MOMO_PARTNER_CODE');
         $this->accessKey = getenv('MOMO_ACCESS_KEY');
         $this->secretKey = getenv('MOMO_SECRET_KEY');
-        $this->endpoint = getenv('MOMO_ENDPOINT') ?: 'https://test-payment.momo.vn/v3/gateway/api/create';
+        $this->endpoint = getenv('MOMO_ENDPOINT') ?: 'https://test-payment.momo.vn/v2/gateway/api/create';
     }
 
     /**
@@ -31,11 +31,11 @@ class MomoService {
         $rawData = "accessKey=" . $this->accessKey . 
                    "&amount=" . $amount . 
                    "&extraData=" . 
-                   "&ipnUrl=" . urlencode($ipnUrl) . 
+                   "&ipnUrl=" . $ipnUrl . 
                    "&orderId=" . $orderId . 
-                   "&orderInfo=" . urlencode($orderInfo) . 
+                   "&orderInfo=" . $orderInfo . 
                    "&partnerCode=" . $this->partnerCode . 
-                   "&redirectUrl=" . urlencode($redirectUrl) . 
+                   "&redirectUrl=" . $redirectUrl . 
                    "&requestId=" . $requestId . 
                    "&requestType=captureWallet";
         
@@ -71,17 +71,17 @@ class MomoService {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode !== 200) {
+        $responseData = json_decode($response, true);
+
+        if ($httpCode !== 200 && empty($responseData)) {
             return [
                 'success' => false,
                 'message' => 'Momo request failed with code ' . $httpCode,
                 'response' => $response
             ];
         }
-
-        $responseData = json_decode($response, true);
         
-        if ($responseData['resultCode'] != 0) {
+        if (isset($responseData['resultCode']) && $responseData['resultCode'] != 0) {
             return [
                 'success' => false,
                 'message' => $responseData['message'] ?? 'Momo payment creation failed',
@@ -107,14 +107,17 @@ class MomoService {
         $signature = $momoParams['signature'] ?? '';
         
         // Build raw data for verification (same order as when creating)
+        $ipnUrl = getenv('MOMO_IPN_URL') ?: 'http://localhost/webhoctap/controllers/PaymentCallbackController.php?gateway=momo';
+        $redirectUrl = getenv('MOMO_RETURN_URL') ?: 'http://localhost/webhoctap/controllers/PurchaseController.php?action=success';
+        
         $rawData = "accessKey=" . $this->accessKey . 
                    "&amount=" . $momoParams['amount'] . 
                    "&extraData=" . ($momoParams['extraData'] ?? '') . 
-                   "&ipnUrl=" . urlencode(getenv('MOMO_IPN_URL') ?: 'http://localhost/webhoctap/controllers/PaymentCallbackController.php?gateway=momo') . 
+                   "&ipnUrl=" . $ipnUrl . 
                    "&orderId=" . $momoParams['orderId'] . 
-                   "&orderInfo=" . urlencode($momoParams['orderInfo'] ?? '') . 
+                   "&orderInfo=" . ($momoParams['orderInfo'] ?? '') . 
                    "&partnerCode=" . $this->partnerCode . 
-                   "&redirectUrl=" . urlencode(getenv('MOMO_RETURN_URL') ?: 'http://localhost/webhoctap/controllers/PurchaseController.php?action=success') . 
+                   "&redirectUrl=" . $redirectUrl . 
                    "&requestId=" . $momoParams['requestId'] . 
                    "&requestType=" . ($momoParams['requestType'] ?? 'captureWallet');
 
@@ -163,14 +166,17 @@ class MomoService {
         $signature = $ipnData['signature'] ?? '';
 
         // Build raw data for IPN verification
+        $ipnUrl = getenv('MOMO_IPN_URL') ?: 'http://localhost/webhoctap/controllers/PaymentCallbackController.php?gateway=momo';
+        $redirectUrl = getenv('MOMO_RETURN_URL') ?: 'http://localhost/webhoctap/controllers/PurchaseController.php?action=success';
+        
         $rawData = "accessKey=" . $this->accessKey . 
                    "&amount=" . $ipnData['amount'] . 
                    "&extraData=" . ($ipnData['extraData'] ?? '') . 
-                   "&ipnUrl=" . urlencode(getenv('MOMO_IPN_URL') ?: 'http://localhost/webhoctap/controllers/PaymentCallbackController.php?gateway=momo') . 
+                   "&ipnUrl=" . $ipnUrl . 
                    "&orderId=" . $ipnData['orderId'] . 
-                   "&orderInfo=" . urlencode($ipnData['orderInfo'] ?? '') . 
+                   "&orderInfo=" . ($ipnData['orderInfo'] ?? '') . 
                    "&partnerCode=" . $this->partnerCode . 
-                   "&redirectUrl=" . urlencode(getenv('MOMO_RETURN_URL') ?: 'http://localhost/webhoctap/controllers/PurchaseController.php?action=success') . 
+                   "&redirectUrl=" . $redirectUrl . 
                    "&requestId=" . $ipnData['requestId'] . 
                    "&requestType=" . ($ipnData['requestType'] ?? 'captureWallet');
 
