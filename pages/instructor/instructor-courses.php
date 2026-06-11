@@ -13,7 +13,7 @@ require_once __DIR__ . '/../../controllers/InstructorController.php';
 
 // Kiểm tra đăng nhập
 if (!SessionManager::isLoggedIn()) {
-    header('Location: index.php?page=login');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             if ($controller->createChapterAction($courseId, $title)) {
                 $_SESSION['success'] = 'Tạo chương thành công';
-                header('Location: index.php?page=instructor-course&id=' . $courseId);
+                header('Location: instructor-course.php?id=' . $courseId);
                 exit;
             } else {
                 $_SESSION['error'] = 'Lỗi khi tạo chương';
@@ -74,7 +74,12 @@ unset($_SESSION['success'], $_SESSION['error']);
 <div class="container my-5">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="mb-4">📚 Quản lý khóa học của tôi</h1>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>📚 Quản lý khóa học của tôi</h1>
+                <a href="instructor-create-course.php" class="btn btn-success btn-lg">
+                    <i class="fa-solid fa-plus"></i> Tạo khóa học mới
+                </a>
+            </div>
 
             <?php if ($success): ?>
                 <div class="alert alert-success alert-dismissible fade show">
@@ -93,7 +98,10 @@ unset($_SESSION['success'], $_SESSION['error']);
             <!-- Nếu chưa có khóa học -->
             <?php if (empty($courses)): ?>
                 <div class="alert alert-info text-center">
-                    <p>Bạn chưa có khóa học nào. Liên hệ admin để được tạo khóa học.</p>
+                    <p>🎓 Bạn chưa có khóa học nào.</p>
+                    <a href="instructor-create-course.php" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> Tạo khóa học ngay
+                    </a>
                 </div>
             <?php else: ?>
                 <div class="row">
@@ -130,10 +138,10 @@ unset($_SESSION['success'], $_SESSION['error']);
                                 </div>
 
                                 <div class="card-footer bg-white border-top">
-                                    <a href="index.php?page=instructor-course&id=<?= $course['id'] ?>" class="btn btn-primary btn-sm w-100 mb-2">
+                                    <a href="instructor-course.php?id=<?= $course['id'] ?>" class="btn btn-primary btn-sm w-100 mb-2">
                                         <i class="fas fa-edit"></i> Quản lý
                                     </a>
-                                    <a href="index.php?page=course-detail&id=<?= $course['id'] ?>" class="btn btn-outline-secondary btn-sm w-100" target="_blank">
+                                    <a href="../course-detail.php?id=<?= $course['id'] ?>" class="btn btn-outline-secondary btn-sm w-100" target="_blank">
                                         <i class="fas fa-eye"></i> Xem khóa học
                                     </a>
                                 </div>

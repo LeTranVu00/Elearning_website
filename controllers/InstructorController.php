@@ -63,6 +63,111 @@ class InstructorController extends BaseController
     }
 
     // =========================================================================
+    // TẠO KHÓA HỌC MỚI
+    // =========================================================================
+
+    /**
+     * Tạo khóa học mới cho giảng viên (OOP - Business Logic)
+     * 
+     * GIẢI THÍCH OOP:
+     * - Phương thức này nằm ở tầng Controller (xử lý yêu cầu từ view)
+     * - Nó gọi phương thức create() từ Course Model (tầng xử lý dữ liệu)
+     * - Kiểm tra quyền trước khi cho phép tạo
+     * - Validate dữ liệu trước khi pass xuống Model
+     * - Pattern này gọi là MVC (Model-View-Controller)
+     * 
+     * @param array $courseData Dữ liệu khóa học từ form
+     * @return array ['success' => bool, 'message' => string, 'courseId' => int|null]
+     */
+    public function createCourseAction(array $courseData): array
+    {
+        // Kiểm tra đăng nhập
+        if (!SessionManager::isLoggedIn()) {
+            return [
+                'success' => false,
+                'message' => 'Vui lòng đăng nhập trước'
+            ];
+        }
+
+        $userId = SessionManager::get('user_id');
+        $conn = Database::getConnection();
+
+        // Kiểm tra quyền: Chỉ instructor hoặc admin mới được tạo course
+        $sql = 'SELECT vai_tro FROM nguoi_dung WHERE id = ?';
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$user || ($user['vai_tro'] !== 'instructor' && $user['vai_tro'] !== 'admin')) {
+            return [
+                'success' => false,
+                'message' => 'Bạn không có quyền tạo khóa học'
+            ];
+        }
+
+        // Validate dữ liệu bắt buộc
+        $required = ['ten_khoa_hoc', 'mo_ta_ngan', 'danh_muc_id', 'gia'];
+        foreach ($required as $field) {
+            if (empty($courseData[$field] ?? null)) {
+                return [
+                    'success' => false,
+                    'message' => 'Các trường bắt buộc: ' . implode(', ', $required)
+                ];
+            }
+        }
+
+        // Validate độ dài tiêu đề
+        if (strlen($courseData['ten_khoa_hoc']) < 5 || strlen($courseData['ten_khoa_hoc']) > 255) {
+            return [
+                'success' => false,
+                'message' => 'Tên khóa học phải từ 5-255 ký tự'
+            ];
+        }
+
+        // Validate giá
+        $gia = (float)$courseData['gia'];
+        if ($gia < 0) {
+            return [
+                'success' => false,
+                'message' => 'Giá không được âm'
+            ];
+        }
+
+        // Validate danh mục
+        $danh_muc_id = (int)$courseData['danh_muc_id'];
+        $sql = 'SELECT id FROM danh_muc_khoa_hoc WHERE id = ?';
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $danh_muc_id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows === 0) {
+            $stmt->close();
+            return [
+                'success' => false,
+                'message' => 'Danh mục không tồn tại'
+            ];
+        }
+        $stmt->close();
+
+        // Gọi Model để tạo course
+        $courseId = $this->courseModel->create($userId, $courseData);
+
+        if ($courseId === false) {
+            return [
+                'success' => false,
+                'message' => 'Lỗi khi tạo khóa học. Khóa học có thể đã tồn tại.'
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Khóa học đã được tạo và công bố thành công!',
+            'courseId' => $courseId
+        ];
+    }
+
+    // =========================================================================
     // QUẢN LÝ CHƯƠNG
     // =========================================================================
 

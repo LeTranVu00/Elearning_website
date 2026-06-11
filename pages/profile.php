@@ -92,6 +92,15 @@ if ($userRole === 'instructor') {
                 </button>
             </div>
           </div>
+
+          <!-- Nút tạo khóa học cho giảng viên -->
+          <?php if ($userRole === 'instructor'): ?>
+            <div class="mb-6">
+              <a href="instructor/instructor-create-course.php" class="inline-block rounded-lg bg-success px-4 py-2.5 font-medium text-white hover:bg-green-600">
+                <i class="fa-solid fa-plus"></i> Tạo khóa học mới
+              </a>
+            </div>
+          <?php endif; ?>
           
     <div class="grid gap-6 md:grid-cols-2">
       <?php if ($userRole === 'instructor' && !empty($managedCourses)): ?>
@@ -106,7 +115,7 @@ if ($userRole === 'instructor') {
               <h3 class="line-clamp-2 text-lg font-bold"><?= htmlspecialchars($course['ten_khoa_hoc']) ?></h3>
               <p class="text-sm text-slate-500"><?= htmlspecialchars(substr($course['mo_ta'], 0, 100)) ?>...</p>
               <div class="flex gap-2">
-                <a href="index.php?page=instructor-course&id=<?= $course['id'] ?>" class="flex-1 rounded-xl bg-primary px-4 py-2.5 text-center font-medium text-white hover:bg-indigo-700">
+                <a href="instructor/instructor-course.php?id=<?= $course['id'] ?>" class="flex-1 rounded-xl bg-primary px-4 py-2.5 text-center font-medium text-white hover:bg-indigo-700">
                   ✏️ Quản Lý Bài
                 </a>
               </div>

@@ -215,6 +215,264 @@ class Course
     }
 
     /**
+     * Tạo danh mục mới
+     * @param string $categoryName Tên danh mục
+     * @return int|false ID danh mục mới hoặc false nếu thất bại
+     */
+    public function createCategory(string $categoryName): int|false
+    {
+        $categoryName = trim($categoryName);
+        
+        if (strlen($categoryName) < 2) {
+            return false;
+        }
+
+        // Kiểm tra danh mục có trùng không
+        $sql = 'SELECT id FROM danh_muc_khoa_hoc WHERE ten_danh_muc = ? LIMIT 1';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('s', $categoryName);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            return false; // Trùng tên
+        }
+        $stmt->close();
+
+        // Thêm danh mục
+        $sql = 'INSERT INTO danh_muc_khoa_hoc (ten_danh_muc) VALUES (?)';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('s', $categoryName);
+        
+        if ($stmt->execute()) {
+            $categoryId = $this->conn->insert_id;
+            $stmt->close();
+            return $categoryId;
+        }
+
+        $stmt->close();
+        return false;
+    }
+
+    /**
+     * Cập nhật danh mục
+     * @param int $categoryId ID danh mục
+     * @param string $categoryName Tên danh mục mới
+     * @return bool true nếu thành công
+     */
+    public function updateCategory(int $categoryId, string $categoryName): bool
+    {
+        $categoryName = trim($categoryName);
+        
+        if (strlen($categoryName) < 2) {
+            return false;
+        }
+
+        $sql = 'UPDATE danh_muc_khoa_hoc SET ten_danh_muc = ? WHERE id = ?';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('si', $categoryName, $categoryId);
+        $result = $stmt->execute();
+        $stmt->close();
+        
+        return $result;
+    }
+
+    /**
+     * Xóa danh mục (nếu không có khóa học nào sử dụng)
+     * @param int $categoryId ID danh mục
+     * @return bool true nếu thành công
+     */
+    public function deleteCategory(int $categoryId): bool
+    {
+        // Kiểm tra có khóa học nào sử dụng danh mục này không
+        $sql = 'SELECT COUNT(*) as count FROM khoa_hoc WHERE danh_muc_id = ?';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('i', $categoryId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if ($result['count'] > 0) {
+            return false; // Không xóa được vì có khóa học sử dụng
+        }
+
+        // Xóa danh mục
+        $sql = 'DELETE FROM danh_muc_khoa_hoc WHERE id = ?';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('i', $categoryId);
+        $result = $stmt->execute();
+        $stmt->close();
+        
+        return $result;
+    }
+
+    /**
+     * Tạo khóa học mới (OOP - CRUD Create)
+     * @param int $instructorId ID của giảng viên tạo course
+     * @param array $courseData Mảng dữ liệu: ten_khoa_hoc, mo_ta_ngan, mo_ta, danh_muc_id, gia, gia_goc
+     * @return int|false ID khóa học mới hoặc false nếu thất bại
+     */
+    public function create(int $instructorId, array $courseData): int|false
+    {
+        // Validate dữ liệu bắt buộc
+        $required = ['ten_khoa_hoc', 'mo_ta_ngan', 'danh_muc_id', 'gia'];
+        foreach ($required as $field) {
+            if (empty($courseData[$field])) {
+                return false;
+            }
+        }
+
+        // Chuẩn bị dữ liệu
+        $ten_khoa_hoc = trim($courseData['ten_khoa_hoc']);
+        $mo_ta_ngan = trim($courseData['mo_ta_ngan']);
+        $mo_ta = trim($courseData['mo_ta'] ?? '');
+        $danh_muc_id = (int)$courseData['danh_muc_id'];
+        $gia = (float)$courseData['gia'];
+        $gia_goc = isset($courseData['gia_goc']) ? (float)$courseData['gia_goc'] : $gia;
+        $trang_thai = 'hien'; // Khóa học mới công bố ngay
+        $anh = $courseData['anh'] ?? null; // Đường dẫn ảnh nếu có
+        $ngay_khai_giang = $courseData['ngay_khai_giang'] ?? null;
+        $lich_hoc = $courseData['lich_hoc'] ?? null;
+
+        // Kiểm tra khóa học có trùng tên không
+        $sql = 'SELECT id FROM khoa_hoc WHERE ten_khoa_hoc = ? LIMIT 1';
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('s', $ten_khoa_hoc);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            return false; // Trùng tên
+        }
+        $stmt->close();
+
+        // Thêm khóa học vào database
+        $sql = 'INSERT INTO khoa_hoc (
+                    ten_khoa_hoc, 
+                    mo_ta_ngan, 
+                    mo_ta, 
+                    danh_muc_id, 
+                    gia, 
+                    gia_goc, 
+                    trang_thai, 
+                    anh,
+                    giang_vien_id,
+                    giang_vien,
+                    ngay_khai_giang,
+                    lich_hoc,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())';
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        // Lấy tên giảng viên từ database
+        $nameResult = $this->conn->query('SELECT ho_ten FROM nguoi_dung WHERE id = ' . (int)$instructorId);
+        $instructorName = $nameResult ? $nameResult->fetch_assoc()['ho_ten'] : '';
+
+        $stmt->bind_param(
+            'ssiddssssis',
+            $ten_khoa_hoc,
+            $mo_ta_ngan,
+            $mo_ta,
+            $danh_muc_id,
+            $gia,
+            $gia_goc,
+            $trang_thai,
+            $anh,
+            $instructorId,
+            $instructorName,
+            $ngay_khai_giang,
+            $lich_hoc
+        );
+
+        if ($stmt->execute()) {
+            $courseId = $this->conn->insert_id;
+            $stmt->close();
+            return $courseId;
+        }
+
+        $stmt->close();
+        return false;
+    }
+
+    /**
+     * Cập nhật khóa học (OOP - CRUD Update)
+     * @param int $courseId ID khóa học
+     * @param array $updateData Mảng dữ liệu cần cập nhật
+     * @return bool true nếu thành công, false nếu thất bại
+     */
+    public function update(int $courseId, array $updateData): bool
+    {
+        if (empty($updateData)) {
+            return false;
+        }
+
+        $allowedFields = [
+            'ten_khoa_hoc', 'mo_ta_ngan', 'mo_ta', 'danh_muc_id',
+            'gia', 'gia_goc', 'muc_do', 'trang_thai', 'anh',
+            'ngay_khai_giang', 'lich_hoc'
+        ];
+
+        $fields = [];
+        $values = [];
+        $types = '';
+
+        foreach ($updateData as $field => $value) {
+            if (in_array($field, $allowedFields)) {
+                $fields[] = $field . ' = ?';
+                $values[] = $value;
+                // Xác định loại dữ liệu
+                if (in_array($field, ['danh_muc_id'])) {
+                    $types .= 'i';
+                } elseif (in_array($field, ['gia', 'gia_goc'])) {
+                    $types .= 'd';
+                } else {
+                    $types .= 's';
+                }
+            }
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $values[] = $courseId;
+        $types .= 'i';
+
+        $sql = 'UPDATE khoa_hoc SET ' . implode(', ', $fields) . ', updated_at = NOW() WHERE id = ?';
+        $stmt = $this->conn->prepare($sql);
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param($types, ...$values);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+
+
+    /**
      * Đạo hàm cấp độ: 'co_ban' → 'Cơ bản'
      * @param string $level Mã cấp độ
      * @return string Tên cấp độ Tiếng Việt
