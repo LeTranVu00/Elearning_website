@@ -680,18 +680,7 @@ ALTER TABLE `chi_tiet_don`
   ADD CONSTRAINT `chi_tiet_don_ibfk_1` FOREIGN KEY (`don_hang_id`) REFERENCES `don_hang` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `chi_tiet_don_ibfk_2` FOREIGN KEY (`khoa_hoc_id`) REFERENCES `khoa_hoc` (`id`) ON DELETE CASCADE;
 
---
--- Các ràng buộc cho bảng `thanh_toan`
---
-ALTER TABLE `thanh_toan`
-  ADD CONSTRAINT `thanh_toan_ibfk_1` FOREIGN KEY (`don_hang_id`) REFERENCES `don_hang` (`id`) ON DELETE CASCADE;
 
---
--- Các ràng buộc cho bảng `chi_tiet_thanh_toan`
---
-ALTER TABLE `chi_tiet_thanh_toan`
-  ADD CONSTRAINT `chi_tiet_thanh_toan_ibfk_1` FOREIGN KEY (`thanh_toan_id`) REFERENCES `thanh_toan` (`id`),
-  ADD CONSTRAINT `chi_tiet_thanh_toan_ibfk_2` FOREIGN KEY (`khoa_hoc_id`) REFERENCES `khoa_hoc` (`id`);
 
 --
 -- Các ràng buộc cho bảng `bai_viet_dien_dan`

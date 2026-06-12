@@ -47,6 +47,13 @@ class GoogleAuthController extends BaseController
         $state = bin2hex(random_bytes(32));
         SessionManager::set('google_oauth_state', $state);
 
+        $intendedRole = $this->getQuery('intended_role', '');
+        if ($intendedRole !== '') {
+            SessionManager::set('google_oauth_intended_role', $intendedRole);
+        } else {
+            SessionManager::remove('google_oauth_intended_role');
+        }
+
         $this->redirect($this->googleOAuthService->createAuthorizationUrl($state));
     }
 
@@ -81,11 +88,28 @@ class GoogleAuthController extends BaseController
             $this->redirect('../pages/login.php');
         }
 
+        $intendedRole = (string)SessionManager::get('google_oauth_intended_role', '');
+        SessionManager::remove('google_oauth_intended_role');
+
+        if ($intendedRole === 'admin' && $user['vai_tro'] !== 'admin') {
+            SessionManager::setErrors(['Tài khoản của bạn không có quyền Quản trị viên.']);
+            $this->redirect('../pages/admin-login.php');
+            return;
+        }
+
+        if ($intendedRole === 'instructor' && $user['vai_tro'] !== 'instructor' && $user['vai_tro'] !== 'admin') {
+            SessionManager::setErrors(['Tài khoản của bạn không có quyền Giảng viên.']);
+            $this->redirect('../pages/instructor-login.php');
+            return;
+        }
+
         SessionManager::login($user);
         
-        // Redirect based on user role
-        if ($user['vai_tro'] === 'instructor') {
-            $this->redirect('../index.php?page=instructor-courses');
+        // Redirect based on user role and intended role
+        if ($intendedRole === 'admin' || $user['vai_tro'] === 'admin') {
+            $this->redirect('../pages/admin.php');
+        } elseif ($intendedRole === 'instructor' || $user['vai_tro'] === 'instructor') {
+            $this->redirect('../pages/instructor/instructor-courses.php');
         } else {
             $this->redirect('../pages/home.php');
         }

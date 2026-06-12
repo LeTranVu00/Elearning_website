@@ -17,15 +17,6 @@ $offset = ($currentPage - 1) * $coursesPerPage;
 $courses = $courseModel->getAll(null, $coursesPerPage, $offset, $searchQuery);
 
 // Helper functions
-function formatPrice($price) {
-    return number_format($price, 0, '.', ',') . 'đ';
-}
-
-function formatDiscount($price, $originalPrice) {
-    if ($originalPrice == 0) return 0;
-    return round((1 - $price / $originalPrice) * 100);
-}
-
 function getAvatarUrl($index) {
     return 'https://i.pravatar.cc/80?img=' . ($index % 10);
 }
@@ -109,15 +100,7 @@ function getAvatarUrl($index) {
                 </div>
               </div>
 
-              <div class="space-y-3">
-                <h3 class="text-sm font-bold text-slate-900">Giá tiền</h3>
-                <div class="space-y-2">
-                  <button type="button" class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100">Miễn phí</button>
-                  <button type="button" class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100">Dưới 1 triệu</button>
-                  <button type="button" class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100">1-2 triệu</button>
-                  <button type="button" class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100">Trên 2 triệu</button>
-                </div>
-              </div>
+
             </div>
 
             <div class="mt-5 flex gap-3 border-t border-slate-100 pt-4">
@@ -134,18 +117,13 @@ function getAvatarUrl($index) {
         <?php if (!empty($courses)): ?>
           <?php foreach ($courses as $index => $course): ?>
             <?php 
-              $discount = formatDiscount($course['gia'], $course['gia_goc']);
               $avgRating = $courseModel->getAverageRating($course['id']);
               $ratingCount = $courseModel->getRatingCount($course['id']);
             ?>
             <article class="card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md hover:shadow-2xl transition-all duration-300">
               <div class="relative aspect-[16/9] overflow-hidden bg-slate-200 lg:aspect-[5/3]">
                 <img src="<?php echo htmlspecialchars($course['anh']); ?>" alt="<?php echo htmlspecialchars($course['ten_khoa_hoc']); ?>" class="h-full w-full object-cover card-img-zoom group-hover:scale-110 transition-transform duration-300">
-                <?php if ($discount > 0): ?>
-                  <span class="absolute left-3 top-3 rounded-full bg-warning px-3 py-1.5 text-xs font-bold text-white shadow-md">
-                    <i class="fa-solid fa-tag mr-1"></i><?php echo $discount; ?>%
-                  </span>
-                <?php endif; ?>
+
                 <button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-md transition hover:bg-white hover:scale-110 text-primary">
                   <i class="fa-regular fa-heart text-lg"></i>
                 </button>
@@ -187,39 +165,6 @@ function getAvatarUrl($index) {
 
                 <!-- Rating và số học viên -->
                 <div class="flex min-h-8 flex-wrap items-center gap-3 text-sm text-slate-600 py-1">
-                  <?php if ($avgRating): ?>
-                    <span class="flex items-center gap-1">
-                      <i class="fa-solid fa-star text-warning text-sm"></i> 
-                      <b class="text-slate-900"><?php echo number_format($avgRating, 1); ?></b>
-                    </span>
-                  <?php endif; ?>
-                  <span class="flex items-center gap-1">
-                    <i class="fa-solid fa-users text-primary text-sm"></i> 
-                    <?php echo number_format($course['so_hoc_vien']); ?>
-                  </span>
-                  <?php if ($course['thoi_luong']): ?>
-                    <span class="flex items-center gap-1">
-                      <i class="fa-regular fa-hourglass text-primary text-sm"></i> 
-                      <?php echo $course['thoi_luong']; ?>h
-                    </span>
-                  <?php endif; ?>
-                </div>
-
-                <!-- Giá tiền -->
-                <div class="space-y-1 border-t border-slate-100 pt-2.5 mt-auto">
-                  <div class="flex items-baseline gap-2">
-                    <span class="text-2xl font-bold text-primary"><?php echo formatPrice($course['gia']); ?></span>
-                    <?php if ($course['gia_goc'] != $course['gia']): ?>
-                      <span class="text-xs text-slate-400 line-through"><?php echo formatPrice($course['gia_goc']); ?></span>
-                    <?php endif; ?>
-                  </div>
-                </div>
-
-                <a href="course-detail.php?id=<?php echo $course['id']; ?>" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white btn-premium transition hover:bg-indigo-700 shadow-md hover:shadow-lg block text-center text-sm">
-                  Xem chi tiết
-                </a>
-              </div>
-            </article>
           <?php endforeach; ?>
         <?php else: ?>
           <div class="col-span-full text-center py-12">

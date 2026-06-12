@@ -6,15 +6,6 @@ include '../components/header.php';
 $courseModel = new Course(Database::getConnection());
 $featuredCourses = $courseModel->getAll(null, 3);
 
-function homeFormatPrice($price) {
-    return number_format($price, 0, '.', ',') . 'đ';
-}
-
-function homeFormatDiscount($price, $originalPrice) {
-    if ($originalPrice == 0) return 0;
-    return round((1 - $price / $originalPrice) * 100);
-}
-
 function homeAvatarUrl($index) {
     return 'https://i.pravatar.cc/80?img=' . ($index % 10);
 }
@@ -41,14 +32,6 @@ function homeAvatarUrl($index) {
         <img src="../assets/images/anh2.jpg" alt="Hero" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/30"></div>
       </div>
-
-      <!-- Video example (uncomment to use):
-      <div class="carousel-slide absolute inset-0 opacity-0">
-        <video autoplay muted loop class="w-full h-full object-cover">
-          <source src="video-url.mp4" type="video/mp4">
-        </video>
-        <div class="absolute inset-0 bg-black/20"></div>
-      </div> -->
     </div>
 
     <!-- Navigation Indicators -->
@@ -230,53 +213,74 @@ function homeAvatarUrl($index) {
   </section>
 
   <!-- ============ 3. WHY CHOOSE US ============ -->
-  <section class="py-20 bg-white">
-    <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="mb-12 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Tại sao chọn LearnCode?</h2>
+  <section id="about" class="py-24 bg-slate-50 relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+      <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-100/40 blur-3xl"></div>
+      <div class="absolute top-[60%] -right-[10%] w-[40%] h-[60%] rounded-full bg-cyan-100/40 blur-3xl"></div>
+    </div>
+    
+    <div class="mx-auto max-w-7xl px-4 lg:px-8 relative z-10">
+      <div class="mb-16 text-center max-w-3xl mx-auto">
+        <span class="text-sm font-bold tracking-wider text-primary uppercase mb-2 block">Về Chúng Tôi</span>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Tại sao chọn <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-500">LearnCode?</span></h2>
+        <p class="text-lg text-slate-600">Chúng tôi không chỉ dạy lập trình, chúng tôi định hình sự nghiệp của bạn với phương pháp học tập tiên tiến nhất.</p>
       </div>
+      
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div class="rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white">
-            <i class="fa-solid fa-book-open text-xl"></i>
+        <!-- Card 1 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-200">
+            <i class="fa-solid fa-gem text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Nội dung chất lượng</h3>
-          <p class="text-slate-700">Khóa học được thiết kế bởi chuyên gia, cập nhật thường xuyên với công nghệ mới nhất.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Nội dung cao cấp</h3>
+          <p class="text-slate-600 leading-relaxed">Giáo trình được tinh chỉnh bởi các chuyên gia hàng đầu, bám sát thực tế doanh nghiệp.</p>
         </div>
-        <div class="rounded-2xl bg-gradient-to-br from-cyan-50 to-cyan-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500 text-white">
-            <i class="fa-solid fa-users text-xl"></i>
+        <!-- Card 2 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-200">
+            <i class="fa-solid fa-users-rays text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Cộng đồng sôi nổi</h3>
-          <p class="text-slate-700">Kết nối với hàng ngàn học viên, chia sẻ kinh nghiệm và học hỏi cùng nhau.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Cộng đồng sôi nổi</h3>
+          <p class="text-slate-600 leading-relaxed">Kết nối, hỏi đáp và phát triển cùng hàng ngàn lập trình viên tài năng trên toàn quốc.</p>
         </div>
-        <div class="rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-white">
-            <i class="fa-solid fa-chart-line text-xl"></i>
+        <!-- Card 3 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-200">
+            <i class="fa-solid fa-chart-line text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Theo dõi tiến độ</h3>
-          <p class="text-slate-700">Hệ thống theo dõi chi tiết giúp bạn đạt mục tiêu nhanh hơn.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Lộ trình cá nhân hóa</h3>
+          <p class="text-slate-600 leading-relaxed">Hệ thống phân tích AI giúp theo dõi và đề xuất lộ trình học tối ưu nhất cho bạn.</p>
         </div>
-        <div class="rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500 text-white">
-            <i class="fa-solid fa-globe text-xl"></i>
+        <!-- Card 4 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-50 to-amber-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-200">
+            <i class="fa-solid fa-laptop-code text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Học mọi lúc mọi nơi</h3>
-          <p class="text-slate-700">Truy cập khóa học trên mọi thiết bị, học tập linh hoạt theo lịch cá nhân.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Thực chiến 100%</h3>
+          <p class="text-slate-600 leading-relaxed">Học qua các dự án thực tế, xây dựng portfolio ấn tượng ngay trong quá trình học.</p>
         </div>
-        <div class="rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-500 text-white">
-            <i class="fa-solid fa-certificate text-xl"></i>
+        <!-- Card 5 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-rose-50 to-rose-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-200">
+            <i class="fa-solid fa-certificate text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Chứng chỉ công nhận</h3>
-          <p class="text-slate-700">Nhận chứng chỉ hoàn thành để bổ sung hồ sơ ngành nghề.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Chứng chỉ uy tín</h3>
+          <p class="text-slate-600 leading-relaxed">Chứng chỉ được công nhận rộng rãi, giúp bạn tự tin ứng tuyển vào các công ty công nghệ lớn.</p>
         </div>
-        <div class="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 p-8 hover:shadow-lg transition">
-          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500 text-white">
-            <i class="fa-solid fa-headset text-xl"></i>
+        <!-- Card 6 -->
+        <div class="group relative rounded-3xl bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200">
+            <i class="fa-solid fa-headset text-2xl"></i>
           </div>
-          <h3 class="mb-3 text-xl font-bold text-slate-900">Hỗ trợ tận tình</h3>
-          <p class="text-slate-700">Đội ngũ hỗ trợ luôn sẵn sàng giải đáp và đồng hành cùng bạn.</p>
+          <h3 class="mb-3 text-2xl font-bold text-slate-900">Hỗ trợ 24/7</h3>
+          <p class="text-slate-600 leading-relaxed">Đội ngũ mentor luôn sẵn sàng giải đáp mọi thắc mắc của bạn bất cứ lúc nào.</p>
         </div>
       </div>
     </div>
@@ -298,17 +302,12 @@ function homeAvatarUrl($index) {
         <?php if (!empty($featuredCourses)): ?>
           <?php foreach ($featuredCourses as $index => $course): ?>
             <?php
-              $discount = homeFormatDiscount($course['gia'], $course['gia_goc']);
               $avgRating = $courseModel->getAverageRating($course['id']);
             ?>
             <article class="card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md hover:shadow-2xl transition-all duration-300">
               <div class="relative aspect-[16/9] overflow-hidden bg-slate-200 lg:aspect-[5/3]">
                 <img src="<?php echo htmlspecialchars($course['anh']); ?>" alt="<?php echo htmlspecialchars($course['ten_khoa_hoc']); ?>" class="h-full w-full object-cover card-img-zoom group-hover:scale-110 transition-transform duration-300">
-                <?php if ($discount > 0): ?>
-                  <span class="absolute left-3 top-3 rounded-full bg-warning px-3 py-1.5 text-xs font-bold text-white shadow-md">
-                    <i class="fa-solid fa-tag mr-1"></i><?php echo $discount; ?>%
-                  </span>
-                <?php endif; ?>
+
                 <button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-md transition hover:bg-white hover:scale-110 text-primary">
                   <i class="fa-regular fa-heart text-lg"></i>
                 </button>
@@ -363,15 +362,6 @@ function homeAvatarUrl($index) {
                       <?php echo $course['thoi_luong']; ?>h
                     </span>
                   <?php endif; ?>
-                </div>
-
-                <div class="space-y-1 border-t border-slate-100 pt-2.5 mt-auto">
-                  <div class="flex items-baseline gap-2">
-                    <span class="text-2xl font-bold text-primary"><?php echo homeFormatPrice($course['gia']); ?></span>
-                    <?php if ($course['gia_goc'] != $course['gia']): ?>
-                      <span class="text-xs text-slate-400 line-through"><?php echo homeFormatPrice($course['gia_goc']); ?></span>
-                    <?php endif; ?>
-                  </div>
                 </div>
 
                 <a href="course-detail.php?id=<?php echo $course['id']; ?>" class="w-full rounded-xl bg-primary px-4 py-2.5 font-semibold text-white btn-premium transition hover:bg-indigo-700 shadow-md hover:shadow-lg block text-center text-sm">
@@ -611,54 +601,74 @@ function homeAvatarUrl($index) {
   </section>
 
   <!-- ============ 8. TEAM SECTION ============ -->
-  <section class="py-20 bg-white">
-    <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="mb-12 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Đội ngũ của chúng tôi</h2>
-        <p class="text-lg text-slate-600">Những người đam mê và tận tâm với sứ mệnh giáo dục</p>
+  <section class="py-24 bg-slate-900 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/20 to-transparent pointer-events-none"></div>
+    <div class="mx-auto max-w-7xl px-4 lg:px-8 relative z-10">
+      <div class="mb-16 text-center max-w-3xl mx-auto">
+        <span class="text-sm font-bold tracking-wider text-cyan-400 uppercase mb-2 block">Chuyên gia của chúng tôi</span>
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Đội ngũ <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary">Giảng viên</span></h2>
+        <p class="text-lg text-slate-300">Học hỏi trực tiếp từ những kỹ sư dày dặn kinh nghiệm đến từ các tập đoàn công nghệ hàng đầu.</p>
       </div>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-        <div class="group rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm hover:shadow-lg transition">
-          <img class="mx-auto mb-4 h-24 w-24 rounded-full object-cover" src="https://i.pravatar.cc/150?img=1" alt="">
-          <h3 class="text-lg font-bold text-slate-900">Nguyễn Văn A</h3>
-          <p class="text-primary font-semibold mb-2">CEO & Founder</p>
-          <p class="text-sm text-slate-600 mb-4">10+ năm kinh nghiệm trong công nghệ và giáo dục.</p>
-          <div class="flex justify-center gap-3 pt-4 border-t border-slate-200 opacity-0 group-hover:opacity-100 transition">
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-twitter"></i></a>
+      
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- Mentor 1 -->
+        <div class="group relative rounded-3xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm hover:-translate-y-3 transition-all duration-500">
+          <div class="aspect-[4/5] overflow-hidden">
+            <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Mentor">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <h3 class="text-2xl font-bold text-white mb-1">Tuấn Anh</h3>
+            <p class="text-cyan-400 font-medium mb-3">Senior Software Engineer</p>
+            <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
           </div>
         </div>
-
-        <div class="group rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm hover:shadow-lg transition">
-          <img class="mx-auto mb-4 h-24 w-24 rounded-full object-cover" src="https://i.pravatar.cc/150?img=2" alt="">
-          <h3 class="text-lg font-bold text-slate-900">Trần Thị B</h3>
-          <p class="text-cyan-600 font-semibold mb-2">CTO</p>
-          <p class="text-sm text-slate-600 mb-4">Chuyên gia về công nghệ học tập và phát triển sản phẩm.</p>
-          <div class="flex justify-center gap-3 pt-4 border-t border-slate-200 opacity-0 group-hover:opacity-100 transition">
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-twitter"></i></a>
+        <!-- Mentor 2 -->
+        <div class="group relative rounded-3xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm hover:-translate-y-3 transition-all duration-500">
+          <div class="aspect-[4/5] overflow-hidden">
+            <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Mentor">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <h3 class="text-2xl font-bold text-white mb-1">Minh Hà</h3>
+            <p class="text-cyan-400 font-medium mb-3">Frontend Team Lead</p>
+            <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
           </div>
         </div>
-
-        <div class="group rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm hover:shadow-lg transition">
-          <img class="mx-auto mb-4 h-24 w-24 rounded-full object-cover" src="https://i.pravatar.cc/150?img=3" alt="">
-          <h3 class="text-lg font-bold text-slate-900">Lê Văn C</h3>
-          <p class="text-emerald-600 font-semibold mb-2">Head of Education</p>
-          <p class="text-sm text-slate-600 mb-4">Giáo viên cao cấp với 15+ năm kinh nghiệm đào tạo.</p>
-          <div class="flex justify-center gap-3 pt-4 border-t border-slate-200 opacity-0 group-hover:opacity-100 transition">
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-twitter"></i></a>
+        <!-- Mentor 3 -->
+        <div class="group relative rounded-3xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm hover:-translate-y-3 transition-all duration-500 mt-0 lg:mt-8">
+          <div class="aspect-[4/5] overflow-hidden">
+            <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80" alt="Mentor">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <h3 class="text-2xl font-bold text-white mb-1">Hoàng Nam</h3>
+            <p class="text-cyan-400 font-medium mb-3">Cloud Architect</p>
+            <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
           </div>
         </div>
-
-        <div class="group rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm hover:shadow-lg transition">
-          <img class="mx-auto mb-4 h-24 w-24 rounded-full object-cover" src="https://i.pravatar.cc/150?img=4" alt="">
-          <h3 class="text-lg font-bold text-slate-900">Phạm Thị D</h3>
-          <p class="text-pink-600 font-semibold mb-2">Head of Community</p>
-          <p class="text-sm text-slate-600 mb-4">Chịu trách nhiệm xây dựng và phát triển cộng đồng học tập.</p>
-          <div class="flex justify-center gap-3 pt-4 border-t border-slate-200 opacity-0 group-hover:opacity-100 transition">
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#" class="text-primary hover:text-cyan-600"><i class="fa-brands fa-twitter"></i></a>
+        <!-- Mentor 4 -->
+        <div class="group relative rounded-3xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm hover:-translate-y-3 transition-all duration-500 mt-0 lg:mt-8">
+          <div class="aspect-[4/5] overflow-hidden">
+            <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Mentor">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <h3 class="text-2xl font-bold text-white mb-1">Thu Thủy</h3>
+            <p class="text-cyan-400 font-medium mb-3">AI Researcher</p>
+            <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
           </div>
         </div>
       </div>
@@ -682,62 +692,85 @@ function homeAvatarUrl($index) {
     </div>
   </section>
 
-
-
-
-
-
-
-
   <!-- ============ 12. CONTACT SECTION ============ -->
-  <section id="contact" class="py-20 text-slate-900">
-    <div class="mx-auto max-w-3xl px-4 text-center lg:px-8">
-      <h2 class="mb-6 text-3xl font-bold md:text-4xl">Liên hệ với chúng tôi</h2>
-      <p class="mb-12 text-lg text-slate-600">Chọn cách liên hệ phù hợp với bạn</p>
-      
-      <div class="flex flex-col items-center justify-center gap-8 sm:flex-row">
-        <!-- Email -->
-        <a href="mailto:contact@learncode.vn" class="group flex flex-col items-center gap-3 transition">
-          <div class="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 transition group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/50">
-            <i class="fa-solid fa-envelope text-4xl"></i>
-          </div>
-          <span class="text-sm font-semibold text-slate-900">Gmail</span>
-        </a>
-
-        <!-- Zalo -->
-        <a href="https://zalo.me/0396870877" target="_blank" rel="noreferrer" class="group flex flex-col items-center gap-3 transition">
-          <div class="flex h-24 w-24 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/50">
-            <i class="fa-solid fa-message text-4xl"></i>
-          </div>
-          <span class="text-sm font-semibold text-slate-900">Zalo</span>
-        </a>
-
-        <!-- Phone -->
-        <a href="tel:+84123456789" class="group flex flex-col items-center gap-3 transition">
-          <div class="flex h-24 w-24 items-center justify-center rounded-full bg-cyan-50 text-cyan-600 transition group-hover:bg-cyan-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-cyan-500/50">
-            <i class="fa-solid fa-phone text-4xl"></i>
-          </div>
-          <span class="text-sm font-semibold text-slate-900">Điện thoại</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-slate-50 py-16">
+  <section id="contact" class="py-24 bg-white relative">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="mb-8 text-center">
-        <h2 class="text-3xl font-bold text-slate-900">Địa chỉ văn phòng</h2>
-        <p class="text-slate-600 mt-2">Ghé thăm chúng tôi tại văn phòng</p>
-      </div>
-      <div class="flex aspect-video items-center justify-center rounded-2xl border border-slate-200 bg-white text-center shadow-sm">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Contact Info -->
         <div>
-          <i class="fa-solid fa-location-dot mb-4 text-5xl text-primary"></i>
-          <p class="text-lg font-bold text-slate-900">123 Đường Nguyễn Huệ</p>
-          <p class="text-slate-600">Quận 1, TP. Hồ Chí Minh</p>
+          <span class="text-sm font-bold tracking-wider text-primary uppercase mb-2 block">Liên hệ</span>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">Kết nối với <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-500">LearnCode</span></h2>
+          <p class="text-lg text-slate-600 mb-10">Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn trên con đường chinh phục công nghệ. Đừng ngần ngại liên hệ!</p>
+          
+          <div class="space-y-8">
+            <div class="flex items-start gap-5 group">
+              <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/30">
+                <i class="fa-solid fa-location-dot text-2xl"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-900 mb-1">Văn phòng chính</h4>
+                <p class="text-slate-600 leading-relaxed">123 Đường Nguyễn Huệ<br>Quận 1, TP. Hồ Chí Minh</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-5 group">
+              <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-50 text-cyan-600 transition-all duration-300 group-hover:bg-cyan-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-cyan-500/30">
+                <i class="fa-solid fa-envelope text-2xl"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-900 mb-1">Email hỗ trợ</h4>
+                <a href="mailto:contact@learncode.vn" class="text-slate-600 hover:text-cyan-600 transition-colors">contact@learncode.vn</a>
+                <p class="text-sm text-slate-500 mt-1">Phản hồi trong vòng 24h</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-5 group">
+              <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 transition-all duration-300 group-hover:bg-emerald-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30">
+                <i class="fa-solid fa-phone text-2xl"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-900 mb-1">Hotline & Zalo</h4>
+                <a href="tel:+84123456789" class="text-slate-600 hover:text-emerald-600 transition-colors font-medium">0123 456 789</a>
+                <p class="text-sm text-slate-500 mt-1">Thứ 2 - Thứ 6 (8:00 - 18:00)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Form (Visual) -->
+        <div class="rounded-3xl bg-white p-8 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative">
+          <div class="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-cyan-400 to-primary rounded-full blur-2xl opacity-20 pointer-events-none"></div>
+          <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-rose-400 to-amber-400 rounded-full blur-2xl opacity-20 pointer-events-none"></div>
+          
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 relative z-10">Gửi lời nhắn cho chúng tôi</h3>
+          <form class="space-y-5 relative z-10" onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất!');">
+            <div class="grid grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-700">Họ và tên</label>
+                <input type="text" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20" placeholder="Nguyễn Văn A" required>
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-700">Số điện thoại</label>
+                <input type="tel" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20" placeholder="0912..." required>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-slate-700">Email</label>
+              <input type="email" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20" placeholder="email@example.com" required>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-slate-700">Nội dung</label>
+              <textarea rows="4" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 resize-none" placeholder="Nhập tin nhắn của bạn..." required></textarea>
+            </div>
+            <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-primary to-cyan-500 px-6 py-4 font-bold text-white shadow-lg shadow-primary/30 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/40">
+              Gửi tin nhắn <i class="fa-solid fa-paper-plane ml-2"></i>
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </section>
+
 </div>
 
 <?php include '../components/footer.php'; ?>

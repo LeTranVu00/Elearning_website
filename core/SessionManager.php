@@ -171,6 +171,16 @@ class SessionManager
     // =========================================================================
 
     /**
+     * Lấy User ID hiện tại
+     * 
+     * @return int|null User ID hoặc null nếu chưa đăng nhập
+     */
+    public static function getUserId(): ?int
+    {
+        return self::get('user_id');
+    }
+
+    /**
      * Lấy toàn bộ thông tin của người dùng đang đăng nhập.
      *
      * @return array|null Mảng thông tin user, hoặc null nếu chưa đăng nhập.

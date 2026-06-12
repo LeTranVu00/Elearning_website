@@ -32,14 +32,8 @@
               </button>
             </div>
             <div class="p-6">
-              <div class="mb-5 flex items-center gap-2">
-                <span class="text-3xl font-bold text-primary">1,200,000d</span>
-                <span class="text-slate-400 line-through">2,000,000d</span>
-                <span class="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-600">-40%</span>
-              </div>
-              <div class="space-y-3">
-                <a href="../controllers/PurchaseController.php?action=checkout&course_id=1" class="block w-full rounded-xl bg-primary px-4 py-3 font-semibold text-white btn-premium text-center">Mua khóa học</a>
-                <button class="w-full rounded-xl border border-slate-200 px-4 py-3 font-semibold btn-premium text-slate-700 hover:bg-slate-100">Thêm vào giỏ hàng</button>
+              <div class="space-y-3 mt-4">
+                <a href="../controllers/EnrollmentController.php?action=enroll&course_id=1" class="block w-full rounded-xl bg-primary px-4 py-3 font-semibold text-white btn-premium text-center text-lg shadow-lg hover:-translate-y-1 transition duration-300">Vào học ngay</a>
               </div>
               <div class="mt-4 flex justify-center gap-6 text-sm text-slate-500">
                 <button><i class="fa-regular fa-heart"></i> Yêu thích</button>
